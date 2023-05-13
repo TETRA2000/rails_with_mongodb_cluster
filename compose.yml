@@ -1,0 +1,60 @@
+version: '3'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/app
+    depends_on:
+      - mongo1
+      - mongo2
+      - mongo3
+    environment:
+      - RAILS_ENV=development
+    networks:
+        - app_network
+        - mongo_network
+  mongo1:
+    image: mongo
+    restart: unless-stopped
+    command: "mongod --replSet myReplicaSet --bind_ip localhost,mongo1"
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo1_data:/data/db
+    networks:
+      - mongo_network
+
+  mongo2:
+    image: mongo
+    restart: unless-stopped
+    command: "mongod --replSet myReplicaSet --bind_ip localhost,mongo2"
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo2_data:/data/db
+    networks:
+      - mongo_network
+
+  mongo3:
+    image: mongo
+    restart: unless-stopped
+    command: "mongod --replSet myReplicaSet --bind_ip localhost,mongo3"
+    ports:
+      - "27019:27017"
+    volumes:
+      - mongo3_data:/data/db
+    networks:
+      - mongo_network
+
+volumes:
+  mongo1_data:
+  mongo2_data:
+  mongo3_data:
+
+networks:
+  mongo_network:
+  app_network:

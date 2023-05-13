@@ -1,24 +1,26 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Setup
 
-Things you may want to cover:
+### Initialize the replica set
 
-* Ruby version
+```bash
+docker compose up -d
 
-* System dependencies
+docker compose exec mongo1 mongosh --eval "rs.initiate({
+ _id: \"myReplicaSet\",
+ members: [
+   {_id: 0, host: \"mongo1\"},
+   {_id: 1, host: \"mongo2\"},
+   {_id: 2, host: \"mongo3\"}
+ ]
+})"
+```
 
-* Configuration
+Details about the replica set with Docker can be found [here](https://www.mongodb.com/compatibility/deploying-a-mongodb-cluster-with-docker/).
 
-* Database creation
+### Makes sure the replica set is working
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```bash
+docker compose exec mongo1 mongosh --eval "rs.status()"
+```
