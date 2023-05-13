@@ -14,6 +14,9 @@ services:
       - mongo3
     environment:
       - RAILS_ENV=development
+    networks:
+        - app_network
+        - mongo_network
   mongo1:
     image: mongo
     restart: unless-stopped
@@ -54,3 +57,4 @@ volumes:
 
 networks:
   mongo_network:
+  app_network:
